@@ -2,6 +2,7 @@ package ch.usi.studysystem.api.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -16,10 +17,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
+import com.jayway.jsonpath.JsonPath;
 import org.springframework.test.web.servlet.MockMvc;
 
 /** The admin guard and the request trace it feeds. Needs no database. */
-@SpringBootTest(properties = {"app.admin.api-key=test-key", "app.query-logs.enabled=false"})
+@SpringBootTest(properties = {"app.admin.api-key=test-key", "app.admin.username=admin",
+        "app.admin.password=admin", "app.query-logs.enabled=false"})
 @AutoConfigureMockMvc
 class AdminApiKeyFilterTest {
 
@@ -81,5 +85,28 @@ class AdminApiKeyFilterTest {
             assertThat(t.userRole()).isEqualTo("public");
             assertThat(t.errorType()).isNull();
         });
+    }
+
+    @Test
+    void loginTokenOpensAdminEndpoints() throws Exception {
+        String body = mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"admin\",\"password\":\"admin\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.tokenType").value("Bearer"))
+                .andReturn().getResponse().getContentAsString();
+        String token = JsonPath.read(body, "$.data.token");
+
+        mvc.perform(get("/api/admin/whoami").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.userId").value("admin"));
+        mvc.perform(get("/api/admin/whoami").header("Authorization", "Bearer " + token + "x"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void wrongPasswordIsRejected() throws Exception {
+        mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"admin\",\"password\":\"wrong\"}"))
+                .andExpect(status().isUnauthorized());
     }
 }

@@ -27,7 +27,13 @@ app:
     allowed-origins:
       - http://localhost:5173
   admin:
-    # X-Admin-Key for /api/admin/**. Blank = admin API turned off.
+    # POST /api/auth/login with these returns a bearer token for /api/admin/**. Blank password = login off.
+    username: ${ADMIN_USERNAME:admin}
+    password: ${ADMIN_PASSWORD:admin}
+    # HMAC secret for the tokens. Blank = random per start (tokens die on restart).
+    token-secret: ${ADMIN_TOKEN_SECRET:}
+    token-ttl: 8h
+    # Optional static key for scripts, sent as X-Admin-Key. Blank = off.
     api-key: ${ADMIN_API_KEY:}
   query-logs:
     # Write every request to the query-logs / query-spans data streams (Kibana).

@@ -13,16 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Example of a guarded endpoint. Every controller under {@code /api/admin} needs the
- * {@code X-Admin-Key} header (see {@code AdminApiKeyFilter}); write endpoints go here.
+ * login token or the {@code X-Admin-Key} header (see {@code AdminApiKeyFilter}); write endpoints go here.
  */
 @RestController
 @RequestMapping("/api/admin")
-@Tag(name = "Admin", description = "Write/edit endpoints. Need the X-Admin-Key header.")
+@Tag(name = "Admin", description = "Write/edit endpoints. Need a login token (POST /api/auth/login) or X-Admin-Key.")
+@SecurityRequirement(name = OpenApiConfig.BEARER_SCHEME)
 @SecurityRequirement(name = OpenApiConfig.ADMIN_KEY_SCHEME)
 public class AdminController {
 
     @GetMapping("/whoami")
-    @Operation(summary = "Check the admin key", description = "200 with the caller when the key is valid, 401 otherwise.")
+    @Operation(summary = "Check the admin key", description = "200 with the caller when the token or key is valid, 401 otherwise.")
     public ApiResponse<Map<String, String>> whoami() {
         TraceContext ctx = TraceContext.current();
         return ApiResponse.ok(Map.of(

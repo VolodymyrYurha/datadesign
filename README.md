@@ -145,17 +145,23 @@ Finished requests go to every `TraceSink`:
 In Kibana, open Discover with the `Query spans (per DB call)` data view, or the "Spans of a trace" saved search
 filtered by `traceId`.
 
-### Read vs. write (admin guard)
+### Read vs. write (admin login)
 
-The UI is read-only. Write/edit endpoints live under `/api/admin/**`, and every request there needs an
-`X-Admin-Key` header equal to `ADMIN_API_KEY` (`app.admin.api-key`); otherwise the API answers 401.
-With no key configured, the admin API is off (403). The check is `AdminApiKeyFilter` (`api/security`) using
-`AdminKeyVerifier` (`infrastructure/security`). Accepted calls are logged with `user.id = admin`.
+The UI is read-only. Write/edit endpoints live under `/api/admin/**` and need an admin login:
 
 ```bash
-curl -H 'X-Admin-Key: change-me' localhost:8080/api/admin/whoami
+curl -s -X POST localhost:8080/api/auth/login -H 'Content-Type: application/json' \
+  -d '{"username":"admin","password":"admin"}'          # -> data.token
+curl -H "Authorization: Bearer <token>" localhost:8080/api/admin/whoami
 ```
 
-In Scalar, set the key once under "Authentication" (scheme `adminKey`). To add a write endpoint, put a
-controller under `/api/admin` and annotate it with `@SecurityRequirement(name = OpenApiConfig.ADMIN_KEY_SCHEME)`
-(see `AdminController`).
+- Credentials come from `ADMIN_USERNAME` / `ADMIN_PASSWORD` (default `admin` / `admin`). A blank password turns login off.
+- The token is a JWT (HS256) valid for 8 h, signed with `ADMIN_TOKEN_SECRET`. Without a secret, a random
+  one is made at every start, so you log in again after a restart.
+- Scripts can send `X-Admin-Key: <ADMIN_API_KEY>` instead, when that variable is set.
+- Anything else on `/api/admin/**` gets 401. Accepted calls are logged with `user.id` = the admin user.
+
+In Scalar: run `POST /api/auth/login`, copy `data.token`, and paste it under Authentication > `bearer`.
+The code: `AuthController`, `api/security/AdminApiKeyFilter`, and `AdminTokenService` / `AdminKeyVerifier`
+in `infrastructure/security`. To add a write endpoint, put a controller under `/api/admin` and annotate it
+with `@SecurityRequirement(name = OpenApiConfig.BEARER_SCHEME)` (see `AdminController`).
