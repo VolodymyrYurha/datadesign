@@ -1,5 +1,3 @@
-Removed section **2. Technologies Used** and renumbered the remaining sections.
-
 # DataPipeline – USI Data Scraping
 
 ## 1. Overview
@@ -231,5 +229,3 @@ It provides:
 - A backup of the final dataset
 
 The resulting JSONL files are ready to be used by the subsequent database and analytics components of the Data Design project.
-
-Remove section 2 from my README
