@@ -43,7 +43,7 @@ Start only the databases (and their UIs if you want them), then run the backend 
 
 ```bash
 cd DataBase-infrastructure
-docker compose up -d neo4j mongo elasticsearch      # + mongo-ui kibana
+docker compose up -d neo4j mongo elasticsearch elastic-init   # + mongo-ui kibana kibana-init
 
 cd ../BackEnd
 ./mvnw install -DskipTests                           # first time only
@@ -103,7 +103,6 @@ domain/db/ElasticService   <- dal/elastic/ElasticDatabaseService: search, count,
   - `LoggingQueryListener`: one log line per query, with logger name `db.neo4j` / `db.mongodb` / `db.elasticsearch`,
     so you can tune them separately, e.g. `logging.level.db.neo4j: DEBUG`
   - `RequestTraceQueryListener`: adds the query to the HTTP response's `meta.queries` (frontend inspector)
-  - Planned: an Elasticsearch listener that writes to the `query-logs` index (Kibana)
 - Results are plain `Map`/`List` values (ObjectIds and dates become strings, Neo4j nodes become maps with
   `elementId` and `labels`), so nothing outside `dal` depends on a DB driver.
 
@@ -133,9 +132,30 @@ Every response uses the same envelope:
 
 Every query made through the database services above shows up in `meta.queries` and in the frontend
 inspector automatically. Each request also gets an `X-Trace-Id` header.
-Finished traces go to a `TraceSink`; it only logs for now, and an Elasticsearch `query-logs` sink comes later.
 
-### Read vs. write
+Finished requests go to every `TraceSink`:
 
-The UI is read-only. Write/edit endpoints will live under `/api/admin/**` behind an admin auth guard
-(see `infra/security`). Nothing there is built yet.
+- `LoggingTraceSink`: one summary log line per request
+- `ElasticQueryLogSink` (`dal/elastic`): one document per request in the `query-logs` data stream and one per
+  DB call in `query-spans`, written in the background with `_bulk`, so a slow or stopped Elasticsearch never
+  affects a response. The trace records time, route template, status, error, caller (`admin` / `anonymous`)
+  and app version. Mappings and setup: [`DataBase-infrastructure/elastic/`](DataBase-infrastructure/elastic/README.md).
+  Turn it off with `QUERY_LOGS_ENABLED=false`.
+
+In Kibana, open Discover with the `Query spans (per DB call)` data view, or the "Spans of a trace" saved search
+filtered by `traceId`.
+
+### Read vs. write (admin guard)
+
+The UI is read-only. Write/edit endpoints live under `/api/admin/**`, and every request there needs an
+`X-Admin-Key` header equal to `ADMIN_API_KEY` (`app.admin.api-key`); otherwise the API answers 401.
+With no key configured, the admin API is off (403). The check is `AdminApiKeyFilter` (`api/security`) using
+`AdminKeyVerifier` (`infrastructure/security`). Accepted calls are logged with `user.id = admin`.
+
+```bash
+curl -H 'X-Admin-Key: change-me' localhost:8080/api/admin/whoami
+```
+
+In Scalar, set the key once under "Authentication" (scheme `adminKey`). To add a write endpoint, put a
+controller under `/api/admin` and annotate it with `@SecurityRequirement(name = OpenApiConfig.ADMIN_KEY_SCHEME)`
+(see `AdminController`).

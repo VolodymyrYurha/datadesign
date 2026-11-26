@@ -1,6 +1,7 @@
 package ch.usi.studysystem.infrastructure.tracing;
 
 import ch.usi.studysystem.domain.DataStore;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -33,13 +34,15 @@ public class QueryTracer {
     /** Same as above, with a custom way to count result rows (e.g. hits in a search response). */
     public <T> T trace(DataStore db, String operation, String query, Map<String, Object> params, Supplier<T> call,
                        Function<? super T, Integer> rowCounter) {
+        Instant startedAt = Instant.now();
         long start = System.nanoTime();
         try {
             T result = call.get();
-            publish(db, operation, query, params, start, rowCounter.apply(result), null);
+            publish(db, operation, query, params, startedAt, start, rowCounter.apply(result), null);
             return result;
         } catch (RuntimeException e) {
-            publish(db, operation, query, params, start, null, e.getMessage() != null ? e.getMessage() : e.toString());
+            publish(db, operation, query, params, startedAt, start, null,
+                    e.getMessage() != null ? e.getMessage() : e.toString());
             throw e;
         }
     }
@@ -49,9 +52,10 @@ public class QueryTracer {
     }
 
     private void publish(DataStore db, String operation, String query, Map<String, Object> params,
-                         long startNanos, Integer rows, String error) {
+                         Instant startedAt, long startNanos, Integer rows, String error) {
         long ms = (System.nanoTime() - startNanos) / 1_000_000;
-        QuerySpan span = new QuerySpan(db, operation, query, params == null ? Map.of() : params, ms, rows, error);
+        QuerySpan span = new QuerySpan(db, operation, query, params == null ? Map.of() : params, ms, rows, error,
+                startedAt);
         for (QueryListener l : listeners) {
             try {
                 l.onQuery(span);
