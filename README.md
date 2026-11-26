@@ -75,11 +75,43 @@ from a module it doesn't reference.
 
 Adding a feature usually means: a model + repository interface in `domain`, the implementation in
 `dal/<store>`, a service in `application`, and a controller in `api`. The DB health check
-(`DatabaseHealthProbe` -> `MongoHealthProbe`/`Neo4jHealthProbe`/`ElasticHealthProbe` ->
-`SystemHealthService` -> `SystemController`) is a working example of that path.
+(`SystemHealthService` using `Neo4jService`/`MongoService`/`ElasticService` -> `SystemController`)
+is a working example.
 
 Run it with `./mvnw install -DskipTests && ./mvnw spring-boot:run -pl api` from `BackEnd/`, or open `BackEnd/pom.xml` in
 IntelliJ and run `StudySystemApplication`.
+
+### Database services and query logging
+
+Raw DB access goes through one service per database. Each is an interface in `domain` (like an
+`IXxxService` in .NET) with its implementation in `dal`, built on a shared abstract base class:
+
+```
+domain/db/Neo4jService     <- dal/neo4j/Neo4jDatabaseService    : query(cypher, params), write(cypher, params)
+domain/db/MongoService     <- dal/mongo/MongoDatabaseService    : find, aggregate, count, runCommand (JSON, mongosh syntax)
+domain/db/ElasticService   <- dal/elastic/ElasticDatabaseService: search, count, info (JSON, Kibana Dev Tools syntax)
+                                     extends dal/common/DatabaseService (abstract)
+```
+
+- **Inject the interface**, never the implementation: `public CourseService(Neo4jService neo4j, MongoService mongo)`.
+  In unit tests, pass `Mockito.mock(Neo4jService.class)` instead (see `SystemHealthServiceTest`).
+- **`DatabaseService.execute(...)`** is the one place every query passes through. It times the call,
+  counts rows, wraps checked driver exceptions in `DatabaseException`, and publishes a `QuerySpan`
+  (db, raw query, params, ms, rows, error) to every `QueryListener`.
+- **Query listeners** (`infrastructure/tracing`) are pluggable, like EF Core interceptors. To add one,
+  implement `QueryListener` and annotate it with `@Component`. Current listeners:
+  - `LoggingQueryListener`: one log line per query, with logger name `db.neo4j` / `db.mongodb` / `db.elasticsearch`,
+    so you can tune them separately, e.g. `logging.level.db.neo4j: DEBUG`
+  - `RequestTraceQueryListener`: adds the query to the HTTP response's `meta.queries` (frontend inspector)
+  - Planned: an Elasticsearch listener that writes to the `query-logs` index (Kibana)
+- Results are plain `Map`/`List` values (ObjectIds and dates become strings, Neo4j nodes become maps with
+  `elementId` and `labels`), so nothing outside `dal` depends on a DB driver.
+
+Example log line (the trace id in brackets matches the `X-Trace-Id` response header):
+
+```
+[5fc515f4-…] db.neo4j : query 261 ms, rows=1 | CALL dbms.components() YIELD … | params={}
+```
 
 ### Query inspector contract
 
@@ -99,8 +131,8 @@ Every response uses the same envelope:
 }
 ```
 
-Wrap every DB call in `QueryTracer.trace(db, operation, rawQuery, params, () -> call)` and it shows up in
-`meta.queries` and in the frontend inspector automatically. Each request also gets an `X-Trace-Id` header.
+Every query made through the database services above shows up in `meta.queries` and in the frontend
+inspector automatically. Each request also gets an `X-Trace-Id` header.
 Finished traces go to a `TraceSink`; it only logs for now, and an Elasticsearch `query-logs` sink comes later.
 
 ### Read vs. write
