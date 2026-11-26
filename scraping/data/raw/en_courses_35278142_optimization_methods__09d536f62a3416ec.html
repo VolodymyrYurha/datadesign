@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Optimization Methods | Università della Svizzera italiana</title>
+<meta name="viewport" content="width=device-width">
+  <link rel="alternate" hreflang="it" href="https://search.usi.ch/it/corsi/35278142/optimization-methods" />
+  <link rel="alternate" hreflang="en" href="https://search.usi.ch/en/courses/35278142/optimization-methods" />
+
+  <meta property="og:title" content="Optimization Methods" />
+  <meta property="og:site_name" content="Università della Svizzera italiana" />
+  <meta property="og:url" content="https://search.usi.ch/en/courses/35278142/optimization-methods" />
+  <meta property="og:locale" content="en" />
+  <meta property="og:locale:alternate" content="it" />
+      <meta property="og:image" content="https://search.usi.ch/img/facebook-icon.jpg" />
+      <meta property="og:type" content="object" />
+      <meta property="og:description" content="Optimisation algorithms are ubiquitous in all branches of science and technology, starting from shape optimisation in engineering to optimal control problems and data science / machine learning. This course provides an introduction to the most important concepts and methods in continuous..." />
+  
+
+<link rel="preload" as="style" href="https://search.usi.ch/build/assets/style-C2Ou89mg.css" /><link rel="stylesheet" href="https://search.usi.ch/build/assets/style-C2Ou89mg.css" />
+<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/favicons/manifest.json">
+<link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#000000">
+<meta name="theme-color" content="#ffffff">
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PNZRM8V');</script>
+</head>
+<body class="initiative search inverted_header0 no_100_filetti0 en">
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PNZRM8V" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<svg style="display:none;"><symbol id="address-book" viewBox="0 0 50 50"><style>.st0,.st1{fill:none;stroke:#000;stroke-width:2;stroke-miterlimit:10}.st1{stroke-width:1.8065}</style><path d="M43.6 50H6.4V0h37.2v50zM8.4 48h33.2V2H8.4v46z"/><path d="M13.5 49V1.8M17.4 8.7h21.4M17.4 13.4h21.4"/><path d="M19.3 41.9h16.8v-4.7l-5.2-2.9 1.1-3-.1-3.7-1.7-3.4h-3.7"/><path d="M36.1 41.9H19.3v-4.7l5.2-2.9-1.2-3 .2-3.7 1.7-3.4h3.6"/></symbol><symbol id="arrow-circle" viewBox="0 0 50 50"><path d="M26 36.92l12-11.95-12-12M37.5 24.97H12"/><circle cx="25" cy="25" r="24"/></symbol><symbol id="arrow-right" viewBox="0 0 50 50"><path d="M0 24h48v2H0z"/><path d="M24.4 50L23 48.6 47.2 25 23 1.4 24.4 0 50 25z"/></symbol><symbol id="bluesky-square" viewBox="0 0 75 75"><path d="M0 0v75h75V0H0zm62.5 21.4c-.1 3.2-.5 6.8-.8 10-.3 2.7-.5 5-2.2 7.2-2.6 3.4-7.2 4.3-11.3 3.9l1.1.3c4 1 9 3.7 7.5 8.6-.9 2.9-4.5 6.3-7.2 7.5-5.9 2.6-9.3-3.3-11.1-8-.3-.7-.5-1.5-.8-2.3 0 0-.1-.3-.2-.2-.3.8-.6 1.7-.9 2.5-1.6 4.1-4.6 9.8-10 8.4-3-.8-7.1-4.5-8.2-7.4-1.9-4.8 2.3-7.7 6.3-8.9l2.1-.5c-4.4.4-9.3-.6-11.8-4.6-1.4-2.2-1.5-4.8-1.8-7.3-.3-3-.6-6.2-.7-9.2-.1-4.1 1.3-6.8 5.9-5.5 5.1 1.5 10 7 13.2 11.1 2.2 2.8 4.3 5.9 5.9 9.1.1 0 .1 0 .1-.1.3-.5.6-1.3 1-1.8 1.5-2.6 3.3-5.3 5.2-7.7 3.2-4 8.4-9.8 13.6-10.9 4.2-.8 5.2 2.2 5.1 5.8z"/></symbol><symbol id="bluesky" viewBox="0 0 50 50"><path d="M25 23.6c.1 0 0 0 0 0 .4-.6.7-1.3 1.1-1.9 1.5-2.6 3.3-5.3 5.2-7.7 3.2-4 8.4-9.8 13.6-10.9 4.3-.9 5.3 2.2 5.1 5.7-.1 3.2-.5 6.8-.8 10-.3 2.7-.5 5-2.2 7.2-2.6 3.4-7.2 4.3-11.3 3.9l1.1.3c4 1 9 3.7 7.5 8.6-.9 2.9-4.5 6.3-7.2 7.5-5.9 2.6-9.3-3.3-11.1-8-.3-.7-.5-1.5-.8-2.3 0 0-.1-.3-.2-.2-.3.8-.6 1.7-.9 2.5-1.6 4.1-4.6 9.8-10 8.4-3-.8-7.1-4.5-8.2-7.4-1.9-4.8 2.3-7.7 6.3-8.9l2.1-.5c-4.4.5-9.3-.6-11.8-4.5C1.1 23.1 1 20.6.7 18c-.3-3-.6-6.2-.7-9.2C-.1 4.7 1.3 2 5.9 3.3c5.1 1.5 10 7 13.2 11.1 2.2 2.9 4.2 6 5.9 9.2z"/></symbol><symbol id="calendar" viewBox="0 0 50 50"><style>.st0{fill:none;stroke:#000;stroke-width:2;stroke-miterlimit:10}</style><path d="M37 13V0M13 13V0M1 6h48v43H1zM1 16h48"/><path d="M11 25h4v4h-4zM23 25h4v4h-4zM35 25h4v4h-4zM11 37h4v4h-4zM23 37h4v4h-4zM35 37h4v4h-4z"/></symbol><symbol id="close" viewBox="0 0 50 50"><path d="M.09 1.395l1.418-1.41L49.835 48.53l-1.417 1.411z"/><path d="M-.017 48.485L48.535.165l1.411 1.418-48.553 48.32z"/></symbol><symbol id="download" viewBox="0 0 50 50"><path d="M12.97 24l11.95 12 12-12M24.92 35.5V0"/><path d="M48.95 13v36h-48V13"/></symbol><symbol id="drop-down" viewBox="0 0 50 50"><path d="M0 24.4L1.4 23 25 47.2 48.6 23l1.4 1.4L25 50z"/></symbol><symbol id="drop-left" viewBox="0 0 50 50"><path d="M25.6 0L27 1.4 2.8 25 27 48.6 25.6 50 0 25z"/></symbol><symbol id="drop-right" viewBox="0 0 50 50"><path d="M25 50l-1.4-1.4L47.2 25 23.6 1.4 25 0l25 25z"/></symbol><symbol id="external-link" viewBox="0 0 50 50"><style>.st0{fill:none;stroke:#000;stroke-width:2;stroke-miterlimit:10}</style><path d="M45 25v24H1V5h24M49 17V1H33M48.7 1.3L25 25"/></symbol><symbol id="facebook-square" viewBox="0 0 75 75"><path d="M0 0v75h75V0H0zm50 20.8h-4.6c-3.6 0-4.3 1.8-4.3 4.3v6.1h8L48 40.1h-6.9v22.3l-8.9.1V40.2H25v-8.9h7.2v-7c0-7.7 4.5-11.8 11.2-11.8 3.1 0 5.9.3 6.6.4v7.9z"/></symbol><symbol id="facebook" viewBox="0 0 50 50"><path d="M19.7 50V27.7h-7.2v-8.9h7.2v-7C19.7 4.1 24.2 0 30.9 0c3.1 0 5.9.3 6.6.4v7.9h-4.6c-3.6 0-4.3 1.8-4.3 4.3v6.1h8l-1.1 8.9h-6.9v22.3"/></symbol><symbol id="info" viewBox="0 0 50 50"><style>.st0{fill:none;stroke:#000;stroke-width:2;stroke-miterlimit:10}</style><path d="M25 39.7v-15"/><circle cx="25" cy="25" r="24"/><path d="M25 18v-5"/></symbol><symbol id="instagram-square" viewBox="0 0 75 75"><path d="M57.1 22.7a8.7 8.7 0 0 0-4.8-4.8c-3.4-1.3-11.1-1-14.8-1s-11.5-.3-14.8 1c-2.2.8-3.8 2.6-4.8 4.8-1.3 3.2-1 11.2-1 14.8s-.3 11.4.8 14.7a8.7 8.7 0 0 0 4.8 4.8c3.4 1.3 11.1 1 14.8 1s11.5.4 14.8-1a8.7 8.7 0 0 0 4.8-4.8c1.4-3.3 1.2-11.2 1.2-14.8 0-3.6.3-11.4-1-14.7zM37.4 50.3c-7.1 0-12.8-5.8-12.8-12.9 0-7.1 5.7-12.8 12.8-12.8 7.1 0 12.9 5.7 12.9 12.8 0 7.1-5.8 12.9-12.9 12.9zm13.4-23.2c-1.6 0-3-1.4-3-3s1.4-3 3-3 3 1.3 3 3c0 1.6-1.4 3-3 3z"/><ellipse transform="rotate(-67.5 37.4 37.5)" cx="37.4" cy="37.5" rx="8.4" ry="8.4"/><path d="M0 .1v75h75V.1H0zm62.2 47.8c-.2 4-1.1 7.5-4 10.4-2.8 2.9-6.4 3.8-10.4 4-4.1.3-16.5.3-20.6 0-4-.2-7.5-1.1-10.4-4-2.9-2.9-3.8-6.5-4-10.6-.3-4-.3-16.5 0-20.6.2-4 1.1-7.5 4-10.4 2.9-2.9 6.4-3.8 10.5-4 4.1-.2 16.5-.2 20.6 0 4 .2 7.5 1.1 10.4 4 2.9 2.8 3.8 6.4 4 10.4.3 4.1.3 16.6-.1 20.8z"/></symbol><symbol id="instagram" viewBox="0 0 50 50"><path d="M24.9 12.1c-7.1 0-12.8 5.7-12.8 12.8s5.7 12.9 12.8 12.9S37.8 32 37.8 24.9 32 12.1 24.9 12.1zm0 21.3c-4.6 0-8.4-3.8-8.4-8.4s3.8-8.4 8.4-8.4 8.4 3.8 8.4 8.4-3.8 8.4-8.4 8.4zm16.4-21.8c0 1.6-1.4 3-3 3s-3-1.4-3-3 1.4-3 3-3 3 1.3 3 3zm8.5 3c-.2-4-1.1-7.6-4-10.4-2.9-2.9-6.4-3.8-10.4-4C31.3 0 18.9 0 14.8.2c-4.1.2-7.6 1.1-10.5 4S.5 10.6.3 14.6C0 18.7 0 31.2.3 35.2c.2 4.1 1.1 7.7 4 10.6 2.9 2.9 6.4 3.8 10.4 4 4.1.3 16.5.3 20.6 0 4-.2 7.6-1.1 10.4-4 2.9-2.9 3.8-6.4 4-10.4.4-4.2.4-16.7.1-20.8zm-5.4 25.1a8.7 8.7 0 0 1-4.8 4.8c-3.3 1.4-11.1 1-14.8 1s-11.4.3-14.8-1a8.7 8.7 0 0 1-4.8-4.8c-1.1-3.3-.8-11.1-.8-14.7s-.3-11.6 1-14.8c1-2.2 2.6-4 4.8-4.8 3.3-1.3 11.1-1 14.8-1s11.4-.3 14.8 1c2.2.9 3.9 2.6 4.8 4.8 1.3 3.3 1 11.1 1 14.7s.2 11.5-1.2 14.8z"/></symbol><symbol id="linkedin-square" viewBox="0 0 75 75"><path d="M0-.1v75h75v-75H0zm23.7 62.6H13.3V29.1h10.4v33.4zm-5.2-37.9c-3.3 0-6-2.7-6-6.1s2.7-6 6-6 6 2.7 6 6-2.7 6.1-6 6.1zm33.6 37.9V46.2c0-3.9-.1-8.8-5.4-8.8-5.4 0-6.2 4.2-6.2 8.6v16.5H30.2V29.1h9.9v4.6h.1c1.4-2.6 4.8-5.4 9.8-5.4 10.5 0 12.4 6.9 12.4 15.9l.1 18.3H52.1z"/></symbol><symbol id="linkedin" viewBox="0 0 50 50"><path d="M11.2 50H.8V16.6h10.4V50zM6 12.1c-3.3 0-6-2.7-6-6.1s2.7-6 6-6 6 2.7 6 6-2.7 6.1-6 6.1zM50 50H39.6V33.7c0-3.9-.1-8.8-5.4-8.8-5.4 0-6.2 4.2-6.2 8.6V50H17.7V16.6h9.9v4.6h.1c1.4-2.6 4.8-5.4 9.8-5.4 10.5 0 12.4 6.9 12.4 15.9L50 50z"/></symbol><symbol id="map" viewBox="0 0 50 50"><path d="M25 23c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6zm0-9.8c-2.1 0-3.8 1.7-3.8 3.8s1.7 3.8 3.8 3.8 3.8-1.7 3.8-3.8-1.7-3.8-3.8-3.8z"/><path d="M25 50l-.8-.9C23.6 48.3 8 29.8 8 17.6 8 7.9 15.6 0 25 0c9.3 0 16.9 7.9 17 17.6.1 12.2-15.6 30.7-16.2 31.5l-.8.9zm0-48c-8.3 0-15 7-15 15.6 0 10 11.9 25.3 15 29.3 3.2-3.9 15.1-19.3 15-29.3C39.9 9 33.2 2 25 2z"/></symbol><symbol id="print" viewBox="0 0 50 50"><style>.st0{fill:#fff}.st1{fill:none;stroke:#000;stroke-width:2;stroke-miterlimit:10}</style><path d="M48 15v21H2V15h46m2-2H0v25h50V13z"/><path d="M13.5 31h23v18h-23z"/><path d="M35.5 32v16h-21V32h21m2-2h-25v20h25V30z"/><path d="M16 36h18M16 40h18M16 44h18"/><ellipse cx="45.5" cy="18.5" rx="1.5" ry="1.5"/><g><path d="M35.5 2v11h-21V2h21m2-2h-25v15h25V0z"/></g></symbol><symbol id="quicklinks" viewBox="0 0 50 50"><style>.st0{fill:none;stroke:#000;stroke-width:2;stroke-miterlimit:10}</style><path d="M37.7 12.7L25 0 12.3 12.7l1.4 1.4L24 3.8v33.6h2V3.8l10.3 10.3z"/><path d="M49 13v36H.9V13"/></symbol><symbol id="sandwich-menu" viewBox="0 0 50 50"><path d="M50 25H0M50 14H0M50 36H0"/></symbol><symbol id="search" viewBox="0 0 50 50"><circle cx="19" cy="19" r="18"/><path d="M32 32l16.79 17"/></symbol><symbol id="settings" viewBox="0 0 50 50"><path d="M25 33.5c-4.7 0-8.5-3.8-8.5-8.5s3.8-8.5 8.5-8.5 8.5 3.8 8.5 8.5-3.9 8.5-8.5 8.5zm0-15c-3.6 0-6.5 2.9-6.5 6.5s2.9 6.5 6.5 6.5 6.5-2.9 6.5-6.5c0-3.5-3-6.5-6.5-6.5z"/><path d="M30.9 50h-12l-.5-6.7c-.6-.2-1.3-.5-2-.8l-5.1 4.4L3 38.5l4.4-5.1c-.3-.7-.6-1.4-.8-2L0 31V19l6.7-.5c.2-.7.5-1.3.8-1.9l-4.4-5.1L11.5 3l5.1 4.4c.7-.3 1.3-.6 2-.8L19 0h12l.5 6.7c.6.2 1.3.5 2 .8l5.1-4.4 8.4 8.5-4.4 5.1c.3.6.5 1.2.8 1.9l6.6.4v12l-6.7.5c-.2.7-.5 1.3-.8 2l4.4 5.1-8.4 8.5-5.1-4.4c-.7.3-1.4.6-2 .8l-.5 6.5zm-10.1-2h8.3l.5-6.2.6-.2c1.3-.4 2.1-.8 2.9-1.2l.6-.3 4.7 4.1 5.8-5.8-4.1-4.7.3-.6c.5-1 .9-1.9 1.2-2.9l.2-.7 6.2-.4v-8.3l-6.2-.4-.2-.6c-.4-1.1-.7-2-1.2-2.9l-.3-.6 4.1-4.7-5.8-5.8-4.7 4.1-.6-.3c-1-.5-1.9-.9-2.9-1.2l-.7-.2-.4-6.2h-8.2l-.4 6.3-.6.2c-1.3.4-2.1.8-2.9 1.2l-.7.3-4.7-4.1-5.8 5.8 4.1 4.7-.3.6c-.5.8-.9 1.8-1.2 2.8l-.2.7-6.2.4v8.2l6.1.4.2.6c.4 1.3.8 2.1 1.2 2.9l.3.6-4.1 4.7 5.8 5.8 4.7-4.1.6.3c1 .5 1.9.9 2.9 1.2l.7.2.4 6.3z"/></symbol><symbol id="star" viewBox="0 0 50 50"><path d="M25 0l-6.6 18.8H0l15 11.5L8.3 50 25 37.7 41.7 50l-6.6-19.8L50 18.8H31.6L25 0z"/></symbol><symbol id="tools" viewBox="0 0 50 50"><style>.st0{fill:none;stroke:#000;stroke-width:2;stroke-miterlimit:10}</style><path d="M30 2v10H20V2h10m2-2H18v14h14V0zM30 38v10H20V38h10m2-2H18v14h14V36z"/><path d="M25 14v22"/><path d="M12 38v10H2V38h10m2-2H0v14h14V36z"/><path d="M7 24v12"/><path d="M48 38v10H38V38h10m2-2H36v14h14V36z"/><path d="M43 24v12M43.5 25h-37"/></symbol><symbol id="twitter-square" viewBox="0 0 75 75"><path d="M19.2 17.5l29.9 40h6.8L26 17.5z"/><path d="M0 0v75h75V0H0zm47.5 60.7L33.9 42.5 17 60.7h-4.3L32 39.9 12.8 14.3h14.8l12.5 16.8 15.5-16.8H60L42.1 33.7l20.2 27H47.5z"/></symbol><symbol id="twitter" viewBox="0 0 1070 1000"><path d="M2.59.041l413.1 551.6-415.7 448.4h93.6l364-392.6 294.1 392.6h318.4l-436.4-582.6 387-417.4h-93.6l-335.3 361.6L320.99.041H2.59zm137.6 68.8h146.3l645.9 862.3h-146.3l-645.9-862.3z"/></symbol><symbol id="usi" viewBox="0 0 200 200"><path d="M180 41.7h-51.1V31.1h42.2C153.1 12.5 127.8 1 99.9 1 45.2 1.1.9 45.4 1 100.1c0 26.8 10.7 51.1 28.1 68.9-1.4-2-2.4-4.1-3-6.1-1-3.5-1-5.9-1.1-15.8V100h14.8v48.5c0 3.4-.1 6.6 1 9.6 3 7.6 11.3 8.5 16 8.5 2.3 0 8.3-.1 12.6-3.9 4.4-3.9 4.4-8.4 4.4-15V100h14.9v49.7c-.1 8.9-.1 16.3-8.5 23.5-8 7-18.4 7.7-23.8 7.7-4.8 0-9.5-.6-14-2.1-1.8-.6-3.5-1.4-5-2.3 17.1 14 39 22.4 62.8 22.4 54.7-.1 99-44.4 98.9-99.1-.1-21.7-7.2-41.8-19.1-58.1zm-4.7 52.7l-6.3-9c2.1-1.4 8.7-5.7 8.7-17.7 0-2-.2-4.1-1-6.2-1.7-4.1-4.6-4.9-6.6-4.9-3.6 0-4.9 2.5-5.7 4.3-.5 1.3-.6 1.5-1.8 6.6l-1.5 6.9c-.9 3.6-1.3 5.4-2 7.2-1.1 2.6-4.5 9.6-14 9.6-10.9 0-17.8-9.2-17.8-22.6 0-12.3 6.1-19 11.6-23l6.6 8.8c-2.8 1.9-8.5 5.7-8.5 14.8 0 5.8 2.6 10.8 7 10.8 4.9 0 5.8-5.3 6.8-10.5l1.3-5.9c1.6-7.7 4.8-18.6 17-18.6 13.1 0 18.4 12.2 18.4 24.3 0 3.2-.3 6.7-1.3 10.2-1.1 3.9-3.9 10.6-10.9 14.9z"/></symbol><symbol id="vimeo-square" viewBox="0 0 75 75"><path d="M0 0v75h75V0H0zm62.5 25.8c-.2 4.9-3.6 11.6-10.2 20.2-6.8 8.9-12.6 13.4-17.3 13.4-2.9 0-5.4-2.8-7.4-8.2-3-9.8-4.9-23.1-8.8-23.1-.4 0-1.7.8-3.9 2.4l-2.4-3.1c4.9-4.3 11.1-10.8 14.7-11.1 3.9-.4 6.3 2.3 7.2 8.1.6 4.1 2.5 19.3 5.7 19.3 1 0 2.6-1.7 4.7-5s3.2-5.9 3.4-7.6c.3-2.8-.9-4.3-3.4-4.3-1.2 0-2.4.2-3.7.8 2.5-8.2 7.2-12.2 14.1-11.9 5.2.1 7.6 3.5 7.3 10.1z"/></symbol><symbol id="vimeo" viewBox="0 0 50 50"><path d="M42.7 3.2c-6.9-.3-11.6 3.7-14.1 11.9 1.3-.6 2.5-.8 3.7-.8 2.5 0 3.7 1.5 3.4 4.3-.2 1.7-1.3 4.3-3.4 7.6s-3.7 5-4.7 5c-3.2 0-5.1-15.2-5.7-19.3-.9-5.8-3.3-8.5-7.2-8.1-3.6.3-9.8 6.8-14.7 11.1L2.4 18c2.2-1.6 3.5-2.4 3.9-2.4 3.9 0 5.8 13.3 8.8 23.1 2 5.4 4.5 8.2 7.4 8.2 4.7 0 10.5-4.5 17.3-13.4 6.6-8.6 10-15.3 10.2-20.2.3-6.6-2.1-10-7.3-10.1z"/></symbol><symbol id="youtube-square" viewBox="0 0 75 75"><path d="M32.3 43.9L45.6 37l-13.3-6.9z"/><path d="M0 0v75h75V0H0zm62.6 39.3c0 4-.7 8-.7 8s-.7 3.4-2.1 4.8c-1.8 2-4 2-4.9 2.1-6.9.5-17.3.5-17.3.5s-12.9-.1-16.8-.6c-1.1-.2-3.6-.1-5.5-2.1-1.5-1.4-2.1-4.8-2.1-4.8s-.7-4-.7-7.9v-3.7c0-4 .7-8 .7-8s.7-3.4 2.1-4.8c1.8-2 4-2 4.9-2.1 6.9-.5 17.3-.5 17.3-.5s10.4 0 17.2.6c.9.1 3.1.1 5 2.1 1.5 1.4 2.1 4.8 2.1 4.8s.7 3.9.8 7.9v3.7z"/></symbol><symbol id="youtube" viewBox="0 0 50 50"><path d="M49.3 15.2s-.6-3.4-2.1-4.8c-1.9-2-4.1-2-5-2.1-6.8-.6-17.2-.6-17.2-.6s-10.4 0-17.3.5c-.9.1-3.1.1-4.9 2.1C1.4 11.7.7 15.1.7 15.1s-.7 4-.7 8v3.7c0 3.9.7 7.9.7 7.9s.6 3.4 2.1 4.8c1.9 2 4.4 1.9 5.5 2.1 3.9.5 16.8.6 16.8.6s10.4 0 17.3-.5c.9-.1 3.1-.1 4.9-2.1 1.4-1.4 2.1-4.8 2.1-4.8s.7-4 .7-8v-3.7c-.1-4-.8-7.9-.8-7.9zM19.8 31.4V17.6l13.3 6.9-13.3 6.9z"/></symbol></svg>
+
+<div class="header0">
+  <div class="logo_bar0"></div>
+  <div class="header_content0">
+    <div class="row">
+      <div class="columns small-12 large-4">
+        <div class="row logo0">
+          <div class="columns small-10 large-6 large-push-6">
+
+            <a href="https://www.usi.ch/en">
+              <div class="logo_text0">
+                <span class="usi_word0">Università</span>
+                <span class="usi_word0">della</span>
+                <span class="usi_word0">Svizzera</span>
+                <span class="usi_word0">italiana</span>
+              </div>
+            </a>
+            <div class="header_sub_title0 hide0">
+              <a href="https://search.usi.ch">search.usi</a>
+            </div>
+
+          </div>
+          <div class="columns small-2 large-6 large-pull-6">
+
+            <div class="logo_img0">
+              <a href="https://www.usi.ch/en">
+                <img src="/img/bollino-usi.svg" alt="Logo USI">
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="columns large-offset-2 large-6">
+        <div class="row tools0">
+          <div class="columns small-4 large-push-4">
+            <div class="navigation_button--small0 top_line0--large hide-for-large trigger" data-target="navigation0">
+              <i class="icon_container0 icon_full0">
+                <svg class="icon0 icon-sandwich-menu ">
+                  <use xlink:href="#sandwich-menu"></use>
+                </svg>
+              </i>
+            </div>
+            <div class="top_line0--large show-for-large">
+
+              <span class="dd_label0">
+                Tools <i class="icon_container0">
+                  <svg class="icon0 icon-drop-down" data-element="icon" data-category="general">
+                    <use xlink:href="#drop-down"></use>
+                  </svg>
+                </i>
+              </span>
+              <ul class="dd_ul0 no_style0">
+                <li><a href="https://www.usi.ch/en">usi.ch</a></li>
+                <li><a href="https://www.desk.usi.ch/en">Info Desk</a></li>
+              </ul>
+
+            </div>
+          </div>
+          <div class="columns small-4 large-push-4">
+            <div class="top_line0--large">
+
+              <span class="dd_label0">
+                Links <i class="icon_container0">
+                  <svg class="icon0 icon-drop-down" data-element="icon" data-category="general">
+                    <use xlink:href="#drop-down"></use>
+                  </svg>
+                </i>
+              </span>
+              <ul class="dd_ul0 no_style0">
+                <li><a href="https://www.usi.ch/en/originalnode/865">Campus map</a></li>
+              </ul>
+            </div>
+
+          </div>
+          <div class="columns small-4 large-pull-8">
+            <div class="top_line0--large">
+
+                                              <a rel="alternate" hreflang="it" href="https://search.usi.ch/it/corsi/35278142/optimization-methods">
+                  <span class="dd_label0 tool_toggler0">Italiano</span>
+                </a>
+                                                            
+              <ul class="dd_ul0 no_style0">
+                                  <li>
+                    <a rel="alternate" hreflang="it" href="https://search.usi.ch/it/corsi/35278142/optimization-methods"
+                      class="">Italiano</a>
+                  </li>
+                                  <li>
+                    <a rel="alternate" hreflang="en" href="https://search.usi.ch/en/courses/35278142/optimization-methods"
+                      class="active">English</a>
+                  </li>
+                              </ul>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="header_sub0">
+    <div class="header_sub_content0">
+      <div class="row">
+        <div class="column small-12 large-push-2">
+          <div class="header_sub_title0">
+            <a href="https://search.usi.ch">search.usi</a>
+          </div>
+          <div class="header_sub_subtitle0">
+            Search for contacts, projects,<br> courses and publications
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+<div class="navigation0 panel0 panel_h0">
+  <div class="navigation_content0">
+    <div class="row">
+      <div class="column small-12">
+        <div class="row nav_header0 hide-for-large">
+          <div class="nav_back_small0 column small-10" data-parent_id="">
+            <span></span>
+          </div>
+          <div class="nav_hide0 column small-2">
+            <div class="trigger" data-target="navigation0">
+              <i class="icon_container0 icon_full0">
+                <svg class="icon0 icon-close" data-element="icon" data-category="general">
+                  <use xlink:href="#close"></use>
+                </svg>
+              </i>
+            </div>
+          </div>
+        </div>
+        <div class="row nav_first_level0">
+          <div class="elements0">
+            <div class="column large-2">
+              <h3 class="bottom_line0 active0" data-element_id="1" data-level="0" data-label="People">
+                <a class="no_underline0" href="https://search.usi.ch/en/people">People</a>
+              </h3>
+              <span class="bottom_bar0"></span>
+            </div>
+            <div class="column large-2">
+              <h3 class="bottom_line0 active0" data-element_id="2" data-level="0" data-label="Education">
+                Education
+                <i class="icon_container0">
+                  <svg class="icon0 icon-drop-down" data-element="icon" data-category="general">
+                    <use xlink:href="#drop-down"></use>
+                  </svg>
+                </i>
+              </h3>
+              <span class="bottom_bar0"></span>
+            </div>
+            <div class="column large-2">
+              <h3 class="bottom_line0 active0" data-element_id="3" data-level="0" data-label="Research">
+                Research
+                <i class="icon_container0">
+                  <svg class="icon0 icon-drop-down" data-element="icon" data-category="general">
+                    <use xlink:href="#drop-down"></use>
+                  </svg>
+                </i>
+              </h3>
+              <span class="bottom_bar0"></span>
+            </div>
+            <div class="column large-2">
+              <h3 class="bottom_line0 active0" data-element_id="4" data-level="0" data-label="Organisation">
+                Organisation
+                <i class="icon_container0">
+                  <svg class="icon0 icon-drop-down" data-element="icon" data-category="general">
+                    <use xlink:href="#drop-down"></use>
+                  </svg>
+                </i>
+              </h3>
+              <span class="bottom_bar0"></span>
+            </div>
+          </div>
+          <div class="column large-4">
+
+                              
+
+<div class="search0">
+  <form class="input0" action="https&#x3A;&#x2F;&#x2F;search.usi.ch&#x2F;en&#x2F;courses" method="get" accept-charset="utf-8">
+    <h3 class="bottom_line0">
+            <input type="text" size="40" name="q" value="" placeholder="Search&#x20;for&#x20;courses">
+    </h3>
+  </form>
+  <div class="icon0 icon_search0 no_cal0">
+    <i class="icon_container0 icon_full0">
+      <svg class="icon0 icon-search" data-element="icon" data-category="general">
+        <use xlink:href="#search"></use>
+      </svg>
+    </i>
+  </div>
+</div>
+
+
+
+
+    
+          </div>
+        </div>
+        <div class="row sub_navigation0">
+
+          <ul class="sub_elements0 no_style0 column large-2" data-parent_id="1" data-level="1" data-label="People"></ul>
+
+          <ul class="sub_elements0 no_style0 column large-2" data-parent_id="2" data-level="1" data-label="Education">
+            <li data-level="1" data-label="Education">
+              <a href="https://search.usi.ch/en/educations">Education</a>
+            </li>
+            <li data-level="1" data-label="Courses">
+              <a href="https://search.usi.ch/en/courses">Courses</a>
+            </li>
+          </ul>
+
+          <ul class="sub_elements0 no_style0 column large-2" data-parent_id="3" data-level="1" data-label="Research">
+            <li data-level="1" data-label="Projects">
+              <a href="https://search.usi.ch/en/projects">Funded projects</a>
+            </li>
+            <li data-level="1" data-label="Publications">
+              <a href="https://search.usi.ch/en/publications">Publications</a>
+            </li>
+            <li data-level="1" data-label="Competences maps">
+              <a href="https://search.usi.ch/en/competence-areas">Competences maps</a>
+            </li>
+          </ul>
+
+          <ul class="sub_elements0 no_style0 column large-2" data-parent_id="4" data-level="1" data-label="Organisation">
+            <li data-level="1" data-label="Faculties">
+              <a href="https://search.usi.ch/en/faculties">Faculties</a>
+            </li>
+                          <li data-level="1" data-label="unit_type.slug">
+                <a href="https://search.usi.ch/en/organisational-unit-type/1/institutes">Institutes</a>
+              </li>
+                          <li data-level="1" data-label="unit_type.slug">
+                <a href="https://search.usi.ch/en/organisational-unit-type/3/services">Services</a>
+              </li>
+                        <li data-level="1" data-label="Other organisational units">
+              <a href="https://search.usi.ch/en/organisational-units">Other organisational units</a>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main0">
+  <div class="page_content">
+    <!-- <div class="row">
+      <div class="column small-12"> -->
+
+        <div class="row">
+  <div class="columns small-12">
+    <section>
+      <h1>Optimization Methods</h1>
+    </section>
+  </div>
+</div>
+
+<nav class="row">
+  <div class="columns small-12 large-10">
+        </div>
+</nav>
+
+<div class="detail">
+
+  <div class="row">
+    <div class="columns large-9">
+
+            <section>
+        <h2>People</h2>
+        <div class="section_item">
+          <div class="row not-entire-width medium-up-2 large-up-3">
+                          <div class="column">
+                 <div class="person_in_charge">
+                   <p>
+                     <strong><a href="https://search.usi.ch/en/people/7ae0ccfefe31ec77de71003997572fbd/sulem-deborah">Sulem D.</a></strong>
+                   </p>
+                   <p>Course director</p>
+                 </div>
+              </div>
+                      </div>
+        </div>
+      </section>
+      
+            <section>
+        <h2>Description</h2>
+
+        <div class="section_item">
+          <div class="text_container">
+            <p>
+              <p>Optimisation algorithms are ubiquitous in all branches of science and technology, starting from shape optimisation in engineering to optimal control problems and data science / machine learning. This course provides an introduction to the most important concepts and methods in continuous optimisation. We will present, analyse, implement, and test some of the most fundamental algorithms. Particular emphasis will be put on the methodology and the underlying mathematical rationale (algorithmic complexity, convergence and convergence speed). We will notably cover optimality conditions, define notions such as convexity and smoothness and review different types of optimisation problems, including unconstrained, least-squares, and linear programming problems.</p>
+            </p>
+          </div>
+        </div>
+      </section>
+      
+            <section>
+        <h2>Objectives</h2>
+
+        <div class="section_item">
+          <div class="text_container">
+            <p>
+              <p>This course introduces main concepts of optimisation and some of the most used algorithms in data science and machine learning. It covers topics in convex and non-convex optimisation, constrained and unconstrained optimisation, including gradient descent, Newton methods, backpropagation and projection gradient descent.</p>
+            </p>
+          </div>
+        </div>
+      </section>
+      
+      
+            <section>
+        <h2>Teaching mode</h2>
+
+        <div class="section_item">
+          <div class="text_container">
+            <p>
+              In presence
+            </p>
+          </div>
+        </div>
+      </section>
+      
+            <section>
+        <h2>Learning methods</h2>
+
+        <div class="section_item">
+          <div class="text_container">
+            <p>
+              <p>Lectures, book chapter reading, self study of slides and lecture notes, exercises (weekly tutorial sessions), problems solving with implementation in Python (bi-weekly home assignments), office hours.</p>
+            </p>
+          </div>
+        </div>
+      </section>
+      
+            <section>
+        <h2>Examination information</h2>
+
+        <div class="section_item">
+          <div class="text_container">
+            <p>
+              <p>Home assignments (10%), midterm written exam (45%), final written exam (45%).</p>
+            </p>
+          </div>
+        </div>
+      </section>
+      
+            <section>
+        <h2>Bibliography</h2>
+                <div class="section_item ">
+          <div class="row not-entire-width">
+            <div class="first_column">
+              <div class="row">
+                <div class="small-12 medium-4 large-3 columns">
+                  <div class="rowinfo">
+                    <strong>Compulsory</strong>
+                  </div>
+                </div>
+                <div class="small-12 medium-8 large-9 columns">
+
+                  <ul class="results_links">
+                                          <li>
+                        Nocedal, Wright. <i>Numerical Optimization: Numerical Optimization</i>. Springer New York, 2006.
+                        
+                      </li>
+                                      </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+              </section>
+      
+      
+            <section>
+        <h2>Education</h2>
+        <div class="section_item">
+          <ul class="results_links">
+                                          <li>
+                  <strong><a href="https://search.usi.ch/en/educations/102/bachelor-of-science-in-data-science">Bachelor of Science in Data Science</a></strong>, Lecture, Elective, 3rd year                </li>
+                                                          <li>
+                  <strong><a href="https://search.usi.ch/en/educations/30/bachelor-of-science-in-informatics">Bachelor of Science in Informatics</a></strong>, Lecture, Elective, 3rd year                </li>
+                                      </ul>
+        </div>
+      </section>
+      
+            <section>
+        <h2>Prerequisite</h2>
+        <div class="section_item">
+          <ul class="results_links">
+                        <li>
+              
+  <a href="https://search.usi.ch/en/courses/35263605/numerical-computing">Numerical Computing</a>,
+    <a href="https://search.usi.ch/en/people/9a52a2fdb8d3d26ec16fb1569b590909/schenk-olaf">Schenk O.</a>,
+    <a href="https://search.usi.ch/en/people/fb7161de3bd1107ea38143332f724390/gaedke-merzhauser-lisa">Gaedke-Merzhäuser L.</a>,
+    <a href="https://search.usi.ch/en/people/bfe7763cea5221d043f905ad414e1a8d/pasadakis-dimosthenis">Pasadakis D.</a>, SA 2021-2022
+  
+            </li>
+                      </ul>
+        </div>
+      </section>
+      
+      
+    </div>
+    <div class="columns large-3 sidebar">
+
+            <section>
+        <h2>Links</h2>
+        <ul class="collection">
+                                <li>
+              <a href="https://search.usi.ch/en/faculties/3/faculty-of-informatics" target="_blank">
+                <div class="section_item">
+                  Faculty of Informatics
+                  <span class="icons">
+                    <svg class="icon icon-arrow-corner-small">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-corner-small"></use>
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            </li>
+                  </ul>
+      </section>
+      
+      <section>
+        <h2>Additional information</h2>
+                <div class="section_item ">
+          <div class="row not-entire-width">
+            <div class="first_column">
+              <div class="row">
+                <div class="small-6 columns">
+                  <div class="rowinfo">
+                    Semester
+                  </div>
+                </div>
+                <div class="small-6 columns">
+                  <strong>
+                    Spring
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+                        <div class="section_item ">
+          <div class="row not-entire-width">
+            <div class="first_column">
+              <div class="row">
+                <div class="small-6 columns">
+                  <div class="rowinfo">
+                    Academic year
+                  </div>
+                </div>
+                <div class="small-6 columns">
+                  <strong>
+                    2026-2027
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+                        <div class="section_item ">
+          <div class="row not-entire-width">
+            <div class="first_column">
+              <div class="row">
+                <div class="small-6 columns">
+                  <div class="rowinfo">
+                    ECTS
+                  </div>
+                </div>
+                <div class="small-6 columns">
+                  <strong>
+                    6.0
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+                        <div class="section_item ">
+          <div class="row not-entire-width">
+            <div class="first_column">
+              <div class="row">
+                <div class="small-6 columns">
+                  <div class="rowinfo">
+                    Language
+                  </div>
+                </div>
+                <div class="small-6 columns">
+                  <strong>
+                                          English
+                                      </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+                                              </section>
+
+      
+    </div>
+  </div>
+</div>
+
+      <!-- </div>
+    </div> -->
+  </div>
+</div>
+
+
+  <div class="footer0 dark_background0">
+  <div class="footer_content0">
+    <div class="row">
+      <div class="column medium-3 large-4">
+        <address>
+          <span class="bold0">Università della <br class="show-for-medium">Svizzera italiana</span><br>
+      Via Buffi 13<br>
+      6900 Lugano, Svizzera<br>
+          tel +41 58 666 40 00<br>
+          e-mail <a href="/cdn-cgi/l/email-protection#eaccc992dcd3d1ccc992dc8fd18c85ccc9dcded1ccc992dddfd1ccc9dbdbdfd1ccc992dcd3d1ccc992d88fd189ccc9dbdaded1">&#x69;&#x6e;fo&#64;&#x75;&#115;&#x69;&#x2e;c&#104;</a><br>
+          <a href="https://www.usi.ch/en/originalnode/143">Other contacts</a><br>
+        </address>
+      </div>
+      <div class="column medium-3 large-2 hide-for-small-only">
+        <section>
+          <div class="row section_title">
+            <div class="column small-12">
+              <h2>Maps and directions</h2>
+            </div>
+          </div>
+          <div class="section_item no_border0">
+            <ul class="no_style0">
+              <li><a href="https://www.usi.ch/en/originalnode/162">Lugano Campus</a></li>
+              <li><a href="http://www.arc.usi.ch/en/node/10">Mendrisio Campus</a></li>
+              <li><a href="https://www.usi.ch/en/originalnode/148">Bellinzona Campus</a></li>
+            </ul>
+          </div>
+        </section>
+      </div>
+      <div class="column medium-3 large-3">
+        <section>
+          <div class="row section_title">
+            <div class="column small-12">
+              <h2>Stay in touch</h2>
+            </div>
+          </div>
+
+          <div class="section_item no_border0">
+            <ul class="no_style0 inline0 social_icons0">
+              <li>
+                <a href="https://www.instagram.com/usiuniversity">
+                  <i class="icon_container0 icon_white0"><svg class="icon0 icon-instagram" data-element="icon" data-category="general"><use xlink:href="#instagram"></use></svg></i>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/edu/school?id=10934">
+                  <i class="icon_container0 icon_white0"><svg class="icon0 icon-linkedin" data-element="icon" data-category="general"><use xlink:href="#linkedin"></use></svg></i>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.youtube.com/usiuniversity">
+                  <i class="icon_container0 icon_white0"><svg class="icon0 icon-youtube" data-element="icon" data-category="general"><use xlink:href="#youtube"></use></svg></i>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/usiuniversity">
+                  <i class="icon_container0 icon_white0"><svg class="icon0 icon-facebook" data-element="icon" data-category="general"><use xlink:href="#facebook"></use></svg></i>
+                </a>
+              </li>
+              <li>
+                <a href="https://bsky.app/profile/usi.ch">
+                  <i class="icon_container0 icon_white0"><svg class="icon0 icon-bluesky" data-element="icon" data-category="general"><use xlink:href="#bluesky"></use></svg></i>
+                </a>
+              </li>
+            </ul>
+            <ul class="no_style0 hide-for-small-only">
+              <li><a href="https://newsletter.usi.ch/archive/en">Newsletter</a></li>
+              <li><a href="https://www.usi.ch/en/originalnode/140">Annual Report</a></li>
+              <li><a href="https://www.usi.ch/en/originalnode/947">Subscribe</a></li>
+            </ul>
+          </div>
+        </section>
+      </div>
+      <div class="column medium-3 large-3">
+      </div>
+    </div>
+    <div class="row lower_footer">
+      <div class="medium-3 large-4 columns">
+        <div>&copy; Università della Svizzera italiana</div>
+      </div>
+      <div class="medium-6 large-5 columns">
+        <ul class="no_style0 inline0 bar_separator0">
+          <li><a href="https://www.usi.ch/en/originalnode/2399">Disclaimer</a></li>
+          <li><a href="https://www.usi.ch/en/originalnode/2398">Credits</a></li>
+        </ul>
+      </div>
+      <div class="medium-3 large-3 columns swissuni_logo0">
+        <a href="https://www.swissuniversities.ch/en/">
+          <img src="/img/swissuniversities.svg" alt="swissuniversities.ch" width="150">
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="footer_bar0">
+  <div class="footer_bar_content0">
+    <div class="row">
+      <div class="column large-12">
+        <ul class="footer_bar_menu_mobile0 no_style0 inline0 hide-for-large">
+          <li>
+            <a href="https://www.usi.ch/en">
+              <i class="icon_container0 icon_full0"><svg class="icon0 icon-usi" data-element="icon" data-category="general"><use xlink:href="#usi"></use></svg></i>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.desk.usi.ch/en">
+              <i class="icon_container0 icon_full0"><svg class="icon0 icon-info" data-element="icon" data-category="general"><use xlink:href="#info"></use></svg></i>
+            </a>
+          </li>
+                    <li class="trigger search_trigger" data-target="navigation0">
+            <i class="icon_container0 icon_full0"><svg class="icon0 icon-search" data-element="icon" data-category="general"><use xlink:href="#search"></use></svg></i>
+          </li>
+                    <li>
+            <a href="https://www.usi.ch/en/originalnode/865">
+              <i class="icon_container0 icon_full0"><svg class="icon0 icon-map" data-element="icon" data-category="general"><use xlink:href="#map"></use></svg></i>
+            </a>
+          </li>
+        </ul>
+        <ul class="footer_bar_menu0 panel0 panel_v0 no_style0 inline0 bar_separator0">
+          <li><a href="https://www.usi.ch/en/originalnode/18">Faculties</a></li>
+          <li><a href="https://www.usi.ch/en/originalnode/18">Institutes</a></li>
+          <li><a href="https://www.usi.ch/en/originalnode/78">Bodies</a></li>
+          <li><a href="https://www.usi.ch/en/originalnode/864">Libraries and archives</a></li>
+          <li><a href="https://www.usi.ch/en/research/areas-and-competences">Areas</a></li>
+          <li><a href="https://www.usi.ch/en/originalnode/119">Services</a></li>
+          <li><a href="https://www.usi.ch/originalnode/7641">Job offers</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="up_button0">
+  <i class="icon_container0 icon_2x"><svg class="icon0 icon-arrow-circle" data-element="icon" data-category="general">
+  <use xlink:href="#arrow-circle"></use></svg></i>
+</div>
+
+
+<div class="shade0"></div>
+
+
+
+<link rel="modulepreload" as="script" href="https://search.usi.ch/build/assets/script-DZXxOU28.js" /><link rel="modulepreload" as="script" href="https://search.usi.ch/build/assets/helpers-CW4hUhwh.js" /><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module" src="https://search.usi.ch/build/assets/script-DZXxOU28.js"></script>
+<script defer src="/js/usi_base_b7670142.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-42006080-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-42006080-1');
+</script>
+</body>
+</html>
