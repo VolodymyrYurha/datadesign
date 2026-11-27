@@ -33,6 +33,9 @@ docker compose up -d --build
 | http://localhost:8081 | DbGate, MongoDB web UI (no login, `USI MongoDB` connection preconfigured) |
 | http://localhost:5601 | Kibana (no login) |
 
+The databases start empty. Fill Neo4j and MongoDB from the scraped dataset with
+`cd DataPipeline && python -m loaders` (setup in [`DataPipeline/loaders/README.md`](DataPipeline/loaders/README.md)).
+
 DB ports for drivers and desktop tools: Neo4j bolt `7687`, MongoDB `27017`, Elasticsearch `9200`.
 After a code change, rebuild just that container: `docker compose up -d --build api` (or `web`).
 The whole stack needs about 5-6 GB of RAM in Docker Desktop.
