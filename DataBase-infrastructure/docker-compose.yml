@@ -1,0 +1,127 @@
+# USI Study System: the whole stack in containers.
+#
+#   docker compose up -d --build            # everything below
+#   docker compose up -d neo4j mongo elasticsearch
+#                                            # only the DBs, when you run BackEnd/FrontEnd from your IDE
+#   docker compose down                      # stop (add -v to also wipe the DB volumes)
+#
+#   App           http://localhost:5173      frontend
+#                 http://localhost:8080      backend API   (docs: /scalar)
+#   DB UIs        http://localhost:7474      Neo4j Browser (neo4j / usi-study-pass)
+#                 http://localhost:8081      DbGate (MongoDB UI)
+#                 http://localhost:5601      Kibana
+#   DB ports      7687 bolt, 27017 mongo, 9200 elasticsearch
+#
+# Everything together needs about 5-6 GB of RAM in Docker Desktop.
+
+name: usi-study-system
+
+services:
+  neo4j:
+    image: neo4j:5.26-community
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-usi-study-pass}
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_server_memory_heap_initial__size: ${NEO4J_HEAP:-1G}
+      NEO4J_server_memory_heap_max__size: ${NEO4J_HEAP:-1G}
+      NEO4J_server_memory_pagecache_size: 512M
+    volumes:
+      - neo4j-data:/data
+      - ./neo4j/init:/init:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  mongo:
+    image: mongo:8.0
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: usi
+    volumes:
+      - mongo-data:/data/db
+      # *.js / *.sh here run once, on the first start with an empty volume.
+      - ./mongo/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  elasticsearch:
+    image: elasticsearch:${STACK_VERSION:-9.4.5}
+    ports:
+      - "9200:9200"
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"   # local dev only
+      ES_JAVA_OPTS: ${ES_JAVA_OPTS:--Xms1g -Xmx1g}
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 18
+
+  # ---------- DB UIs ----------
+
+  kibana:
+    image: kibana:${STACK_VERSION:-9.4.5}
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+  mongo-ui:
+    # DbGate: modern web DB client, preconfigured with our MongoDB connection.
+    image: dbgate/dbgate:latest
+    ports:
+      - "8081:3000"
+    environment:
+      CONNECTIONS: mongo
+      LABEL_mongo: USI MongoDB
+      URL_mongo: mongodb://mongo:27017/usi
+      ENGINE_mongo: mongo@dbgate-plugin-mongo
+    volumes:
+      - dbgate-data:/root/.dbgate     # saved queries and settings
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  # ---------- App ----------
+
+  api:
+    build: ../BackEnd
+    ports:
+      - "8080:8080"
+    environment:
+      MONGO_URI: mongodb://mongo:27017/usi?serverSelectionTimeoutMS=2000
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:-usi-study-pass}
+      ELASTIC_URI: http://elasticsearch:9200
+    depends_on:
+      neo4j: { condition: service_healthy }
+      mongo: { condition: service_healthy }
+      elasticsearch: { condition: service_healthy }
+
+  web:
+    build: ../FrontEnd
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+
+volumes:
+  neo4j-data:
+  mongo-data:
+  es-data:
+  dbgate-data:

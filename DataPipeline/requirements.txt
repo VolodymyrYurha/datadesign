@@ -1,0 +1,9 @@
+# Scraping
+requests
+beautifulsoup4
+# DB loaders
+pymongo
+neo4j
+elasticsearch>=9,<10
+# Spark (Level 3)
+pyspark

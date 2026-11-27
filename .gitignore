@@ -1,0 +1,63 @@
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+*.iml
+
+# Env files (keep the examples)
+.env
+.env.*
+!.env.example
+
+# Java / Maven
+BackEnd/**/target/
+
+# Node
+FrontEnd/node_modules/
+FrontEnd/dist/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+DataPipeline/data/raw/
+spark-warehouse/
+*.parquet
+*.tsbuildinfo
+
+# More editors / OS
+.fleet/
+*.swp
+*~
+Thumbs.db
+
+# Java extras
+*.class
+*.log
+hs_err_pid*
+BackEnd/.mvn/wrapper/maven-wrapper.jar
+build/
+.gradle/
+
+# Node extras
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+coverage/
+.vite/
+
+# Python extras
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+.mypy_cache/
+.ruff_cache/
+
+# Spark
+metastore_db/
+derby.log
+DataPipeline/spark/output/
+
+# Local DB data if bind mounts are ever used instead of named volumes
+DataBase-infrastructure/data/
+DataBase-infrastructure/**/data/
