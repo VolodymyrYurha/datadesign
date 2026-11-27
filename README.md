@@ -33,8 +33,11 @@ docker compose up -d --build
 | http://localhost:8081 | DbGate, MongoDB web UI (no login, `USI MongoDB` connection preconfigured) |
 | http://localhost:5601 | Kibana (no login) |
 
-The databases start empty. Fill Neo4j and MongoDB from the scraped dataset with
-`cd DataPipeline && python -m loaders` (setup in [`DataPipeline/loaders/README.md`](DataPipeline/loaders/README.md)).
+Neo4j and MongoDB come up **filled with the real scraped dataset** (no mocks): the one-shot `mongo-init`
+service creates the collections and validators, then `seed` loads `DataPipeline/data/canonical` into both
+stores (913 nodes / 10,178 relationships in Neo4j; 5 programs, 135 courses, 173 professors, 600 students in
+MongoDB). It upserts by id, so it runs safely on every `up`. After the dataset changes:
+`docker compose up -d --build seed`. Details: [`DataPipeline/loaders/README.md`](DataPipeline/loaders/README.md).
 
 DB ports for drivers and desktop tools: Neo4j bolt `7687`, MongoDB `27017`, Elasticsearch `9200`.
 After a code change, rebuild just that container: `docker compose up -d --build api` (or `web`).
@@ -46,7 +49,7 @@ Start only the databases (and their UIs if you want them), then run the backend 
 
 ```bash
 cd DataBase-infrastructure
-docker compose up -d neo4j mongo elasticsearch elastic-init   # + mongo-ui kibana kibana-init
+docker compose up -d seed elastic-init             # Neo4j + Mongo (filled) + Elasticsearch; + mongo-ui kibana kibana-init
 
 cd ../BackEnd
 ./mvnw install -DskipTests                           # first time only

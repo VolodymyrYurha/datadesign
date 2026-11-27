@@ -2,6 +2,9 @@
 
 Fill Neo4j and MongoDB from `data/canonical/*.jsonl`. Both are upserts, so re-running is safe.
 
+`docker compose up` already does this through the `seed` service (image from `DataPipeline/Dockerfile.seed`,
+which contains the loaders and the canonical data). Run the loaders by hand only while working on them:
+
 ```bash
 cd DataPipeline
 python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt   # first time

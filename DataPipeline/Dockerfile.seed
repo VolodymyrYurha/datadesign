@@ -1,0 +1,10 @@
+# One-shot seeder: loads data/canonical into Neo4j and MongoDB, then exits.
+# Built from the repo root (it also needs DataBase-infrastructure/neo4j/init) by docker-compose's `seed` service.
+FROM python:3.12-slim
+WORKDIR /app
+RUN pip install --no-cache-dir "pymongo>=4.6" "neo4j>=5.20"
+COPY DataBase-infrastructure/neo4j/init DataBase-infrastructure/neo4j/init
+COPY DataPipeline/loaders DataPipeline/loaders
+COPY DataPipeline/data/canonical DataPipeline/data/canonical
+WORKDIR /app/DataPipeline
+ENTRYPOINT ["python", "-m", "loaders"]

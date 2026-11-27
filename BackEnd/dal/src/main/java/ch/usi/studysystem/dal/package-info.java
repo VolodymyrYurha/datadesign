@@ -3,7 +3,7 @@
  * implementing the repository interfaces from {@code domain}.
  *
  * <p>Wrap every DB call in {@link ch.usi.studysystem.infrastructure.tracing.QueryTracer} so it
- * shows up in the query inspector. A mock implementation (in-memory, from
- * {@code DataPipeline/data/sample}) can later replace a real one via a Spring profile.
+ * shows up in the query inspector. There are no mock implementations: local development runs against
+ * the docker-compose databases, which are seeded with the real scraped dataset.
  */
 package ch.usi.studysystem.dal;

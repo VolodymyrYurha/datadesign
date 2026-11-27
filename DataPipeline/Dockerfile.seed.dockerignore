@@ -1,0 +1,6 @@
+# Build context is the repo root; send only what the seeder needs.
+*
+!DataBase-infrastructure/neo4j/init/**
+!DataPipeline/loaders/**
+!DataPipeline/data/canonical/**
+**/__pycache__
