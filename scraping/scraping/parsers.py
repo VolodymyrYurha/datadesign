@@ -515,9 +515,12 @@ def parse_program(html, url):
 
 # ----------------------------------------------------------------- person page
 _POSITION_RE = re.compile(
-    r"\b(full professor|associate professor|assistant professor|professor|senior lecturer|lecturer|"
-    r"researcher|postdoc|post-doctoral|teaching assistant|assistant|adjunct|visiting|titular|"
-    r"research fellow|research associate|phd student|doctoral)\b", re.I)
+    r"^(full professor|associate professor|assistant professor|professor|"
+    r"senior lecturer|lecturer|researcher|postdoc|post-doctoral researcher|"
+    r"teaching assistant|adjunct professor|visiting professor|"
+    r"research fellow|research associate|phd student|doctoral student)$",
+    re.I
+)
 
 
 def split_name(full, short=None, slug=None):
@@ -563,8 +566,9 @@ def parse_person(html, url, short_name=None):
     start = lines.index(full_name) + 1 if full_name in lines else 0
     position = ""
     for l in lines[start:start + 25]:
-        if len(l) <= 90 and _POSITION_RE.search(l):
-            position = l
+        candidate = clean(l).strip(" ,.;:")
+        if _POSITION_RE.fullmatch(candidate):
+            position = candidate
             break
     return {"rawId": pid, "firstName": first, "lastName": last,
             "position": position, "profileUrl": canon_url(url)}
