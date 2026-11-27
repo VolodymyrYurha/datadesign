@@ -58,7 +58,8 @@ Origin: **S** = scraped from search.usi.ch, **G** = generated.
 
 > [!NOTE]
 > USI gives a course a new id every academic year. Because we scrape one year, the USI id is fine as our
-> course id. If we ever add more years, a course needs its own id separate from the yearly offering.
+> course id. Prerequisites on USI point to past offerings (e.g. "SP 2023"), so they are matched to our
+> courses by title, not by id. If we ever add more years, a course needs its own id separate from the yearly offering.
 
 ### Professor
 
@@ -89,7 +90,7 @@ No emails, phone numbers or photos.
 |---|---|---|---|
 | Program INCLUDES Course | `type` (`compulsory` / `elective`), `studyYear` (1, 2, 3) | S | From the "Education" table on each course page |
 | Professor TEACHES Course | `role` (`director` / `assistant`) | S | From the "People" section on each course page |
-| Course REQUIRES Course | | G | USI rarely publishes prerequisites; generate a few plausible ones (year 1 before year 2), no cycles |
+| Course REQUIRES Course | `source` (`scraped` / `synthetic`) | S, G fallback | The course must be taken before. Scraped from the "Prerequisite" section of the course page (see SCRAPING.md). Only courses with no published prerequisites may get a few generated ones (year 1 before year 2) |
 | Student ENROLLED_IN Program | `startYear`, `status` (`active` / `graduated`) | G | Exactly one program per student |
 | Student TOOK Course | `semester` (e.g. `2025-fall`), `status` (`enrolled` / `passed` / `failed`), `grade` | G | Grade on the Swiss 1 to 6 scale, pass >= 4; only courses of the student's program |
 

@@ -1,0 +1,178 @@
+{
+  "index_patterns": [
+    "query-logs*"
+  ],
+  "data_stream": {},
+  "priority": 500,
+  "_meta": {
+    "description": "One document per HTTP request, DB calls nested in spans",
+    "spec": "DataBase-infrastructure/elastic/REQUIREMENTS.md"
+  },
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "index.lifecycle.name": "query-logs-policy",
+      "analysis": {
+        "analyzer": {
+          "query_text": {
+            "type": "custom",
+            "tokenizer": "query_tokens",
+            "filter": [
+              "lowercase"
+            ]
+          }
+        },
+        "tokenizer": {
+          "query_tokens": {
+            "type": "pattern",
+            "pattern": "\\$?[\\p{L}\\p{N}_]+(?:\\.[\\p{L}\\p{N}_]+)*|:[\\p{L}\\p{N}_]+",
+            "group": 0
+          }
+        }
+      }
+    },
+    "mappings": {
+      "dynamic": "strict",
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "traceId": {
+          "type": "keyword"
+        },
+        "http": {
+          "properties": {
+            "method": {
+              "type": "keyword"
+            },
+            "path": {
+              "type": "keyword"
+            },
+            "route": {
+              "type": "keyword"
+            },
+            "status": {
+              "type": "short"
+            },
+            "query": {
+              "type": "keyword"
+            }
+          }
+        },
+        "durationMs": {
+          "type": "long"
+        },
+        "outcome": {
+          "type": "keyword"
+        },
+        "error": {
+          "properties": {
+            "message": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 1024
+                }
+              }
+            },
+            "type": {
+              "type": "keyword"
+            }
+          }
+        },
+        "user": {
+          "properties": {
+            "id": {
+              "type": "keyword"
+            },
+            "role": {
+              "type": "keyword"
+            }
+          }
+        },
+        "client": {
+          "properties": {
+            "ip": {
+              "type": "ip"
+            },
+            "userAgent": {
+              "type": "keyword"
+            }
+          }
+        },
+        "app": {
+          "properties": {
+            "version": {
+              "type": "keyword"
+            }
+          }
+        },
+        "spanCount": {
+          "type": "integer"
+        },
+        "dbs": {
+          "type": "keyword"
+        },
+        "dbDurationMs": {
+          "type": "long"
+        },
+        "spans": {
+          "type": "nested",
+          "properties": {
+            "@timestamp": {
+              "type": "date"
+            },
+            "spanIndex": {
+              "type": "integer"
+            },
+            "db": {
+              "type": "keyword"
+            },
+            "operation": {
+              "type": "keyword"
+            },
+            "query": {
+              "type": "text",
+              "analyzer": "query_text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 8191
+                }
+              }
+            },
+            "queryHash": {
+              "type": "keyword"
+            },
+            "language": {
+              "type": "keyword"
+            },
+            "params": {
+              "type": "flattened"
+            },
+            "durationMs": {
+              "type": "long"
+            },
+            "rows": {
+              "type": "integer"
+            },
+            "error": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 1024
+                }
+              }
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    }
+  }
+}

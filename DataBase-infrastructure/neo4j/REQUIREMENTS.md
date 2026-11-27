@@ -18,7 +18,7 @@ Nodes carry only `id` and `name`; all other details are in MongoDB, looked up by
 |---|---|
 | `(Program)-[:INCLUDES]->(Course)` | type (`compulsory` / `elective`), studyYear |
 | `(Professor)-[:TEACHES]->(Course)` | role (`director` / `assistant`) |
-| `(Course)-[:REQUIRES]->(Course)` | |
+| `(Course)-[:REQUIRES]->(Course)` | source (`scraped` / `synthetic`) |
 | `(Student)-[:ENROLLED_IN]->(Program)` | startYear, status |
 | `(Student)-[:TOOK]->(Course)` | semester, status, grade |
 
