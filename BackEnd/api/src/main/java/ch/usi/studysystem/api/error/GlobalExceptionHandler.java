@@ -1,6 +1,7 @@
 package ch.usi.studysystem.api.error;
 
 import ch.usi.studysystem.api.dto.ApiResponse;
+import ch.usi.studysystem.infrastructure.tracing.TraceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-/** Turns exceptions into the standard {@link ApiResponse} envelope. */
+/** Turns exceptions into the standard {@link ApiResponse} envelope and records them on the request trace. */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -18,6 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Void>> validation(MethodArgumentNotValidException e) {
+        TraceContext.recordError(e);
         String msg = e.getBindingResult().getFieldErrors().stream()
                 .map(f -> f.getField() + ": " + f.getDefaultMessage())
                 .reduce((a, b) -> a + "; " + b)
@@ -27,6 +29,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> notFound(NotFoundException e) {
+        TraceContext.recordError(e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail("NOT_FOUND", e.getMessage()));
     }
 
@@ -38,6 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> unexpected(Exception e) {
         log.error("Unhandled error", e);
+        TraceContext.recordError(e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.fail("INTERNAL_ERROR", e.getMessage()));
     }

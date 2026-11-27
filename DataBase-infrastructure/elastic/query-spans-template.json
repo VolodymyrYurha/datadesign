@@ -1,0 +1,120 @@
+{
+  "index_patterns": [
+    "query-spans*"
+  ],
+  "data_stream": {},
+  "priority": 500,
+  "_meta": {
+    "description": "One flat document per DB call, request fields copied in",
+    "spec": "DataBase-infrastructure/elastic/REQUIREMENTS.md"
+  },
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "index.lifecycle.name": "query-logs-policy",
+      "analysis": {
+        "analyzer": {
+          "query_text": {
+            "type": "custom",
+            "tokenizer": "query_tokens",
+            "filter": [
+              "lowercase"
+            ]
+          }
+        },
+        "tokenizer": {
+          "query_tokens": {
+            "type": "pattern",
+            "pattern": "\\$?[\\p{L}\\p{N}_]+(?:\\.[\\p{L}\\p{N}_]+)*|:[\\p{L}\\p{N}_]+",
+            "group": 0
+          }
+        }
+      }
+    },
+    "mappings": {
+      "dynamic": "strict",
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "spanIndex": {
+          "type": "integer"
+        },
+        "db": {
+          "type": "keyword"
+        },
+        "operation": {
+          "type": "keyword"
+        },
+        "query": {
+          "type": "text",
+          "analyzer": "query_text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 8191
+            }
+          }
+        },
+        "queryHash": {
+          "type": "keyword"
+        },
+        "language": {
+          "type": "keyword"
+        },
+        "params": {
+          "type": "flattened"
+        },
+        "durationMs": {
+          "type": "long"
+        },
+        "rows": {
+          "type": "integer"
+        },
+        "error": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 1024
+            }
+          }
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "traceId": {
+          "type": "keyword"
+        },
+        "http": {
+          "properties": {
+            "method": {
+              "type": "keyword"
+            },
+            "route": {
+              "type": "keyword"
+            },
+            "status": {
+              "type": "short"
+            }
+          }
+        },
+        "user": {
+          "properties": {
+            "id": {
+              "type": "keyword"
+            }
+          }
+        },
+        "app": {
+          "properties": {
+            "version": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    }
+  }
+}

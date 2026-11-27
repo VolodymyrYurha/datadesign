@@ -10,6 +10,7 @@ export interface QuerySpan {
   durationMs: number
   rows: number | null
   error: string | null
+  startedAt: string // ISO timestamp
 }
 
 export interface ApiMeta {
