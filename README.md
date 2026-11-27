@@ -26,7 +26,7 @@ docker compose up -d --build
 
 | URL | What |
 |---|---|
-| http://localhost:5173 | Frontend (status page + query inspector) |
+| http://localhost:5173 | Frontend (professors, status, query inspector) |
 | http://localhost:8080/scalar | API docs (Scalar) |
 | http://localhost:8080/api/system/health | Pings all three DBs (200 if all up, 503 otherwise) |
 | http://localhost:7474 | Neo4j Browser (user `neo4j`, password `usi-study-pass`) |
@@ -80,7 +80,8 @@ References point inward: `api -> application, dal, infrastructure`, `dal -> doma
 from a module it doesn't reference.
 
 Adding a feature usually means: a model + repository interface in `domain`, the implementation in
-`dal/<store>`, a service in `application`, and a controller in `api`. The DB health check
+`dal/<store>`, a service in `application`, and a controller in `api`. The Professors page is a worked
+example through every layer: [`ADDING-A-FEATURE.md`](ADDING-A-FEATURE.md). The DB health check
 (`SystemHealthService` using `Neo4jService`/`MongoService`/`ElasticService` -> `SystemController`)
 is a working example.
 

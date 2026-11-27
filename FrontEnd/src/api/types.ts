@@ -24,3 +24,19 @@ export interface ApiResponse<T> {
   meta: ApiMeta
   error: { code: string; message: string } | null
 }
+
+// Mirrors ch.usi.studysystem.domain.professor.Professor.
+export interface TaughtCourse {
+  courseId: string
+  title: string
+  role: 'director' | 'assistant'
+}
+
+export interface Professor {
+  id: string
+  firstName: string
+  lastName: string
+  position: string | null
+  profileUrl: string | null
+  courses: TaughtCourse[]
+}
