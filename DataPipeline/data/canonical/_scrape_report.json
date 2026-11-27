@@ -1,0 +1,18 @@
+{
+  "academicYearStart": 2026,
+  "counts": {
+    "programs": 5,
+    "courses": 135,
+    "professors": 173,
+    "program_courses": 151,
+    "teaches": 369,
+    "prerequisite_details": 23
+  },
+  "coursesWithMissingField": {
+    "description": 3,
+    "objectives": 3,
+    "examInfo": 3,
+    "ects": 6
+  },
+  "coursesWithoutProfessor": 0
+}
